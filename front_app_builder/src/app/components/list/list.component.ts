@@ -48,8 +48,11 @@ export class ListComponent implements OnInit{
   onViewApplication(app: any) {
     this.applicationService.download(app.id).subscribe({
       next : (res : any )=> this.toastr.success("downloaded") , 
-      error : (err : any)=> this.toastr.error(err.error.message)
-    })
+      error : (err : any)=> {this.toastr.error(err.error.message)
+                    console.log(err);
+                    
+        
+      })}
     
   }
 
