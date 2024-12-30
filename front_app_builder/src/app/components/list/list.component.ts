@@ -71,13 +71,13 @@ export class ListComponent implements OnInit{
 
         this.toastr.success('Download successful');
       },
-      error: (err: any) => {
-        console.error('Download error:', err);
-        const blob = response.body as Blob;
+      error: (res: any) => {
+        console.error('Download error:', res);
+        const blob = res.body as Blob;
         const url = window.URL.createObjectURL(blob);
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
         a.href = url;
-        const contentDisposition = response.headers.get('Content-Disposition');
+        const contentDisposition = res.headers.get('Content-Disposition');
         let filename = app.name+'.apk';
 
         if (contentDisposition) {
