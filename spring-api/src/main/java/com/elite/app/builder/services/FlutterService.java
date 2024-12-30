@@ -1224,8 +1224,10 @@ public class FlutterService {
 
            try {
             // Initialize the process
-            process = Runtime.getRuntime().exec(command, null, new File(appname));
-            log.info("Executing command: {}", command);
+            var buildCommand = "flutter build apk";
+            process = Runtime.getRuntime().exec(buildCommand, null, new File(appname));
+            log.info("Executing command: {}", buildCommand);
+            log.info("")
 
             // Capture the standard output
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
