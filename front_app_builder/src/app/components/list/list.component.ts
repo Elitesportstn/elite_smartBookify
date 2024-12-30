@@ -47,6 +47,12 @@ export class ListComponent implements OnInit{
 
   onViewApplication(app: any) {
     this.toastr.info(app.name + "(" + app.version+ ")")
+    console.log(app);
+    this.applicationService.download(app.id).subscribe({
+      next : (res : any )=> this.toastr.success("downloaded") , 
+      error : (err : any)=> this.toastr.error(err.error.message)
+    })
+    
   }
 
   onDeleteApplication(index: number) {

@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class ApplicationService {
+
 apiUrl= 'https://apismartbookify.savooria.com'
 
   constructor(private http: HttpClient , private authService : AuthService) { }
@@ -15,6 +16,16 @@ apiUrl= 'https://apismartbookify.savooria.com'
       Authorization: `Bearer ${this.authService.getToken()}`, 
     });
     return  this.http.post(this.apiUrl+"/applications/",body , {
+      
+      headers: headers
+    });
+  }
+
+  download(id: any) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`, 
+    });
+    return  this.http.post(this.apiUrl+"/applications/download/"+id , {
       
       headers: headers
     });
