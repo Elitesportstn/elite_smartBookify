@@ -25,7 +25,7 @@ apiUrl= 'https://apismartbookify.savooria.com'
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`, 
     });
-    return  this.http.post(this.apiUrl+"/applications/download/"+id , {
+    return  this.http.get(this.apiUrl+"/applications/download/"+id , {
       
       headers: headers
     });
