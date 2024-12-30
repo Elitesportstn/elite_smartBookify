@@ -45,20 +45,37 @@ export class ListComponent implements OnInit{
 
   
 
-  onViewApplication(app: any) {
-    this.applicationService.download(app.id).subscribe({
-      next : (res : any )=> {
-        const blob = new Blob([res]);
-        const url= window.URL.createObjectURL(blob);
-        window.open(url);
-        
-        this.toastr.success("downloaded")} , 
-      error : (err : any)=> {
-        console.log(err);
-        
-        this.toastr.error(err.error.message)}
-    })
-    
+  onViewApplication(app: any) { 
+
+     this.applicationService.download(app.id).subscribe({
+      next: (response: any) => {
+        const blob = response.body as Blob;
+        const url = window.URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = url;
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = app.name+'.apk';
+
+        if (contentDisposition) {
+          const matches = /filename="([^"]+)"/.exec(contentDisposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1];
+          }
+        }
+
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+        this.toastr.success('Download successful');
+      },
+      error: (err: any) => {
+        console.error('Download error:', err);
+        this.toastr.error(err.error?.message || 'Download failed');
+      }
+    }); 
   }
 
   onDeleteApplication(index: number) {
