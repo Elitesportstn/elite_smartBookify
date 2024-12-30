@@ -1,0 +1,37 @@
+<app-nav></app-nav>
+
+<div class="page-layout">
+
+
+
+    <div class="container">
+      <h1>Upload a PDF File</h1>
+      <form (submit)="onSubmit()">
+        <!-- Dropzone -->
+        <div class="drop-zone" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+          <p *ngIf="!selectedFile">Drag & Drop your files here</p>
+          <ul *ngIf="selectedFile">
+            <li *ngIf="selectedFile">{{ selectedFile.name }}</li>
+          </ul>
+          <input type="file" id="file-upload" (change)="onFileSelected($event)" style="display: none" />
+          <label for="file-upload" class="file-label">Or click to select file </label>
+        </div>
+  
+        <!-- Input Fields -->
+        <input type="email" disabled [(ngModel)]="email" name="email" placeholder="Your Email" required />
+        <input type="text" [(ngModel)]="name" name="name" placeholder="Your application name" required />
+  
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="isLoading">
+          <div *ngIf="isLoading" class="loading-indicator">
+            <p>Building ... </p>
+            <div class="spinner"></div> <!-- Example spinner -->
+          </div> <div  *ngIf="!isLoading">Build application </div> 
+        </button>
+      </form>
+       
+    </div>
+    <div>
+  
+    </div>
+  </div>

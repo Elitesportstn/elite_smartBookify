@@ -1,0 +1,34 @@
+ 
+<div class="page-layout">
+  <div class="container">
+    <h1>Confirm Your Email</h1>
+    <p>We have sent a confirmation code to your email. Please enter it below to activate your account.</p>
+
+    <form (submit)="onSubmit()">
+      <!-- Code Input -->
+      <input 
+        type="text" 
+        [(ngModel)]="confirmationCode" 
+        name="confirmationCode" 
+        placeholder="Enter Confirmation Code" 
+        required 
+        class="confirm-code-input" 
+      />
+
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="isLoading" class="confirm-code-button">
+        <div *ngIf="isLoading" class="loading-indicator">
+          <p>Validating code...</p>
+          <div class="spinner"></div> <!-- Example spinner -->
+        </div>
+        <div *ngIf="!isLoading">Confirm Code</div>
+      </button>
+    </form>
+
+    <!-- Resend Code -->
+    <div class="additional-links">
+      <p>Didn't receive the code? <a (click)="onResendCode()" class="resend-link">Resend Code</a></p>
+    </div>
+  </div>
+</div>
+ 

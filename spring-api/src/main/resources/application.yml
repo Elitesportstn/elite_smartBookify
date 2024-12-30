@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: eliteAppBuilder
+  datasource:
+    url: jdbc:mysql://mysql:3307/elite_app_builder?createDatabaseIfNotExists=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: abderrahmentalby@gmail.com
+    password: hojr gror tvcy bnnf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        transport.protocol: smtp
+        debug: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB

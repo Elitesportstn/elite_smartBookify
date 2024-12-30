@@ -1,0 +1,75 @@
+<div class="page-layout">
+  <div class="container">
+    <h1>Register</h1>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <!-- Input Fields -->
+      <input 
+        type="text" 
+        formControlName="name" 
+        placeholder="Your Full Name" 
+        class="input" 
+      />
+      <div class="error" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
+        <p *ngIf="registerForm.get('name')?.errors?.['required']">Name is required.</p>
+        <p *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</p>
+      </div>
+
+      <input 
+        type="email" 
+        formControlName="email" 
+        placeholder="Your Email" 
+        class="input" 
+      />
+      <div class="error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+        <p *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</p>
+        <p *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email address.</p>
+      </div>
+
+      <input 
+        type="tel" 
+        formControlName="phone" 
+        placeholder="Your Phone" 
+        class="input" 
+      />
+      <div class="error" *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid">
+        <p *ngIf="registerForm.get('phone')?.errors?.['required']">Phone number is required.</p>
+        <p *ngIf="registerForm.get('phone')?.errors?.['pattern']">Phone number must be 10 digits.</p>
+      </div>
+
+      <input 
+        type="password" 
+        formControlName="password" 
+        placeholder="Your Password" 
+        class="input" 
+      />
+      <div class="error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+        <p *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</p>
+        <p *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters long.</p>
+      </div>
+
+      <input 
+        type="password" 
+        formControlName="confirmPassword" 
+        placeholder="Confirm Password" 
+        class="input" 
+      />
+      <div class="error" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.hasError('mismatch')">
+        <p>Passwords do not match.</p>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="isLoading || registerForm.invalid" class="button">
+        <div *ngIf="isLoading" class="loading-indicator">
+          <p>Registering...</p>
+          <div class="spinner"></div> <!-- Example spinner -->
+        </div>
+        <div *ngIf="!isLoading">Register</div>
+      </button>
+    </form>
+
+    <!-- Additional Links -->
+    <div class="additional-links">
+      <a routerLink="/login">Already have an account? Login</a>
+    </div>
+  </div>
+</div>

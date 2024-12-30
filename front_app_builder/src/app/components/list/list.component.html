@@ -1,0 +1,28 @@
+<app-nav></app-nav>
+<div class="page-layout">
+  <div class="container">
+    <h1 *ngIf="applications.length > 0">Your Applications</h1>
+    <h1 *ngIf="applications.length == 0">No Application Found</h1>
+    <div class="app-list">
+      <ul>
+        <li *ngFor="let app of applications; let i = index">
+          <div class="app-item">
+            <div class="app-details">
+              <span class="app-name">{{ app.name }}</span>
+              <span class="app-email">{{ app.version }}</span>
+            </div>
+            <div class="app-actions">
+              <button class="icon-button" (click)="onViewApplication(app)">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="icon-button" (click)="onDeleteApplication(i)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <button *ngIf="applications.length == 0" class="add-app-button" (click)="onAddApplication()">Add New Application</button>
+  </div>
+</div>
