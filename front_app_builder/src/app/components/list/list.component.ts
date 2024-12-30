@@ -47,33 +47,17 @@ export class ListComponent implements OnInit{
 
   onViewApplication(app: any) {
     this.applicationService.download(app.id).subscribe({
-      next: (res: Blob) => {
-        // Create a URL for the Blob object
-        const url = window.URL.createObjectURL(res);
-
-        // Create a temporary anchor element to initiate download
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        a.href = url;
-        a.download =  app.name+'.apk';
-
-        // Append the anchor to the body
-        document.body.appendChild(a);
-
-        // Trigger the download
-        a.click();
-
-        // Clean up by removing the anchor and revoking the object URL
-        a.remove();
-        window.URL.revokeObjectURL(url);
-
-        // Show success message
-        this.toastr.success('Download successful');
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.toastr.error(err.error?.message || 'Download failed');
-      }
-    });
+      next : (res : any )=> {
+        const blob = new Blob([res]);
+        const url= window.URL.createObjectURL(blob);
+        window.open(url);
+        
+        this.toastr.success("downloaded")} , 
+      error : (err : any)=> {
+        console.log(err);
+        
+        this.toastr.error(err.error.message)}
+    })
     
   }
 
