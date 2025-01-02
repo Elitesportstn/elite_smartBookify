@@ -49,7 +49,7 @@ public class ApplicationService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm");
         String formattedDate = now.format(formatter);
         appname = appname+formattedDate;
-        appname.toLowerCase();
+        appname = appname.toLowerCase();
         if (optionalUser.isPresent()){
             var app = applicationRepository.findAllByOwner(optionalUser.get());
             if (app.isPresent()){
