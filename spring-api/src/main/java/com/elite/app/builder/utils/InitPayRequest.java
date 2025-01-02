@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
  @AllArgsConstructor
 @NoArgsConstructor
 public class InitPayRequest {
-    public  String eamil;
+    public  String email;
      public  String paymentRef;
 }
