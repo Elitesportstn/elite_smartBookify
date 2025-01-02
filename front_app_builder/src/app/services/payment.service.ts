@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 export class PaymentService {
   Api_Key = "67767c953a850325dc1cac4a:QdIciZavFOTjZeoo1hcUOgRpAE";
   wallet_Id = "67767c953a850325dc1cac52";
-  localUrl = "http://localhost:8080/api/auth/"
+  localUrl = "https://smartbookify.savooria.com/api/auth/"
   constructor(private http: HttpClient , private authService : AuthService) { }
 
   initPayURL() {
