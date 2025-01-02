@@ -7,8 +7,7 @@ import { AuthService } from './auth.service';
 })
 export class ApplicationService {
 
-apiUrl= 'http://localhost:8080'
-
+apiUrl= 'https://apismartbookify.savooria.com'
   constructor(private http: HttpClient , private authService : AuthService) { }
 
   create(body : any){
