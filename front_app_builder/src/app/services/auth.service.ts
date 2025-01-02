@@ -9,7 +9,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 export class AuthService {
 
 
-  url= 'https://apismartbookify.savooria.com'
+  url= 'https://apismartbookify.savooria.com/api/auth/'
 
   constructor(private http: HttpClient, private router: Router) { }
 
