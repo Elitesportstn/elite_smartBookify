@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 })
 export class ApplicationService {
 
-apiUrl= 'https://apismartbookify.savooria.com'
+apiUrl= 'http://localhost:8080'
 
   constructor(private http: HttpClient , private authService : AuthService) { }
 
@@ -26,7 +26,8 @@ apiUrl= 'https://apismartbookify.savooria.com'
       Authorization: `Bearer ${this.authService.getToken()}`, 
     });
     return  this.http.get(this.apiUrl+"/applications/download/"+id , {
-      
+        responseType: 'blob', // Expect a binary response
+        observe: 'response',  // Include headers in the response
       headers: headers
     });
   }

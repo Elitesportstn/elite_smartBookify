@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
 export class AuthService {
 
 
-  url= 'https://apismartbookify.savooria.com/api/auth/'
+  url= 'http://localhost:8080/api/auth/'
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -42,8 +42,37 @@ export class AuthService {
     var token = this.getToken()
     if (token) {
       var decoded = jwtDecode(token)
+       
        return decoded.sub
     }
     return null;
   }
+  
+  isUserSubsribed() {
+    var token = this.getToken()
+    if (token) {
+      var decoded = jwtDecode<CustomJwtPayload>(token);      
+       return decoded.user.subscribed
+    }
+    return null;
+  }
+
+   
+  getUser() {
+    var token = this.getToken()
+    if (token) {
+      var decoded = jwtDecode<CustomJwtPayload>(token);
+       return decoded.user
+    }
+    return null;
+  }
+
+
+}
+
+interface CustomJwtPayload extends JwtPayload {
+  user: {
+    subscribed: boolean;
+    
+  };
 }

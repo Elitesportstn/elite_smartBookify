@@ -2,7 +2,7 @@ spring:
   application:
     name: eliteAppBuilder
   datasource:
-    url: jdbc:mysql://mysql:3307/elite_app_builder?createDatabaseIfNotExists=true
+    url: jdbc:mysql://localhost:3306/elite_app_builder?createDatabaseIfNotExists=true
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver

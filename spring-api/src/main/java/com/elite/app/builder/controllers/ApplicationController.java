@@ -2,22 +2,27 @@ package com.elite.app.builder.controllers;
 
 import com.elite.app.builder.entities.Application;
 import com.elite.app.builder.services.ApplicationService;
-import io.swagger.v3.oas.annotations.Operation;
+
+ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
+ import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+ 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
+
+ import java.util.List;
 
 @RestController
 @RequestMapping("/applications")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:4200/"})
+@Slf4j
 public class ApplicationController {
 
     private final ApplicationService applicationService;
@@ -89,7 +94,7 @@ public class ApplicationController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/download/{appId}")
-    public ResponseEntity<?> download(@PathVariable("appId") Long id) {
+    public ResponseEntity<?> download(@PathVariable("appId") Long id) throws java.io.IOException {
         return applicationService.download(id);
     }
 
@@ -104,4 +109,8 @@ public class ApplicationController {
     public ResponseEntity<?> getAllByUser(@PathVariable("email") String email) {
         return applicationService.getUserApps(email);
     }
+
+
+ 
+
 }

@@ -14,6 +14,8 @@ import { ForgetpasswordComponent } from './components/forgetpassword/forgetpassw
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProfileComponent } from './components/profile/profile.component';
+import { PayedComponent } from './components/payed/payed.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RegisterComponent,
     ForgetpasswordComponent,
     ConfirmEmailComponent,
+    ProfileComponent,
+    PayedComponent,
     ],
   imports: [
     BrowserModule,

@@ -27,6 +27,8 @@ import java.util.List;
         private String email;
         private String password;
         private boolean enabled = false;
+        private boolean subscribed = false ;
+        private String paymentRef = "";
         private String activationCode = "";
         private String phone;
         @Enumerated(EnumType.STRING)

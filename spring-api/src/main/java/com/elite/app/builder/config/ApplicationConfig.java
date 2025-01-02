@@ -58,7 +58,7 @@ public WebMvcConfigurer corsConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/**") // Apply to all endpoints
-                    .allowedOrigins("https://smartbookify.savooria.com")
+                    .allowedOrigins("https://smartbookify.savooria.com" , "http://localhost:4200")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
                     .allowedHeaders("*") // Allow all headers
                     .allowCredentials(true); // Allow credentials (cookies, etc.)

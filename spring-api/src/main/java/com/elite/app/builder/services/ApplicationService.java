@@ -4,9 +4,13 @@ import com.elite.app.builder.entities.Application;
 import com.elite.app.builder.entities.User;
 import com.elite.app.builder.repositories.ApplicationRepository;
 import com.elite.app.builder.repositories.UserRepository;
-import com.elite.app.builder.utils.EliteError;
+import com.elite.app.builder.utils.EliteResponse;
+import com.elite.app.builder.utils.MyFileNotFoundException;
+
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -14,21 +18,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
+ import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.nio.file.Files;
+ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.Optional; 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ApplicationService {
     
     final ApplicationRepository applicationRepository;
@@ -38,19 +40,24 @@ public class ApplicationService {
 
     public ResponseEntity<?> create(String email , String appname , MultipartFile file){
         if (file.isEmpty()){
-            return ResponseEntity.status(400).body(new EliteError("no file provided"));
+            return ResponseEntity.status(400).body(new EliteResponse("no file provided"));
         }
         Optional<User> optionalUser = userRepository.findByEmail(email);
         var application = new Application();
+        LocalDateTime now = LocalDateTime.now();
+        // Format the date and time (e.g., "01.01.2025.10.37")
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm");
+        String formattedDate = now.format(formatter);
+        appname = appname+formattedDate;
         if (optionalUser.isPresent()){
             var app = applicationRepository.findAllByOwner(optionalUser.get());
             if (app.isPresent()){
-                return ResponseEntity.status(400).body(new EliteError("you have excited your limits please subscribe"));
+                return ResponseEntity.status(400).body(new EliteResponse("you have excited your limits please subscribe"));
             }
 
            var appCreated =  flutterService.create(file , appname);
             if (!appCreated){
-                return ResponseEntity.badRequest().body(new EliteError("application creation failed"));
+                return ResponseEntity.badRequest().body(new EliteResponse("application creation failed"));
             }
             application.setName(appname);
             application.setVersion("1.0");
@@ -67,7 +74,7 @@ public class ApplicationService {
            var savedUser =  userRepository.save(user);
              var appCreated =  flutterService.create(file , appname);
             if (!appCreated){
-                return ResponseEntity.badRequest().body(new EliteError("application creation failed"));
+                return ResponseEntity.badRequest().body(new EliteResponse("application creation failed"));
             }
             application.setName(appname);
             application.setVersion("1.0");
@@ -89,7 +96,7 @@ public class ApplicationService {
         if (optionalApplication.isPresent()){
             return ResponseEntity.ok(optionalApplication.get());
         }
-        var error = new EliteError();
+        var error = new EliteResponse();
         error.setMessage("No application found");
         return ResponseEntity.status(200).body(error);
     }
@@ -97,42 +104,43 @@ public class ApplicationService {
         Optional<Application> optionalApplication = applicationRepository.findById(id);
         if (optionalApplication.isPresent()){
             applicationRepository.deleteById(id);
-            var error = new EliteError();
+            var error = new EliteResponse();
             error.setMessage("Application deleted successfully");
             return ResponseEntity.status(200).body(error);
         }
-        var error = new EliteError();
+        var error = new EliteResponse();
         error.setMessage("No Application found");
         return ResponseEntity.status(200).body(error);
     }
 
-    public ResponseEntity<?> download(Long id) {
+    public ResponseEntity<?> download(Long id) throws java.io.IOException {
             Optional<Application> application = applicationRepository.findById(id);
             if (application.isPresent()){
-                var fileName = application.get().getName()+".apk";
-                try {
-                    // Build file path
-                    Path filePath = Paths.get("apps/").resolve(fileName).normalize();
+                var fileName = application.get().getName();
 
-                    // Load the file as a Resource
-                    Resource resource = new UrlResource(filePath.toUri());
+                 try {
+        // Load file as Resource
+        Resource resource =  loadFileAsResource(fileName);
 
-                    if (!resource.exists()) {
-                        return ResponseEntity.notFound().build();
-                    }
+        // Check if resource exists
+        if (resource == null || !resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
 
-                    // Set response headers
-                    return ResponseEntity.ok()
-                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                            .body(resource);
+        // Try to determine file's content type
+        String contentType = "application/vnd.android.package-archive";
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    return ResponseEntity.internalServerError().build();
-                }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
 
+    } catch (IOException ex) {
+        log.error("Error occurred while loading the file: " + fileName, ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
         }else {
-                var error = new EliteError();
+                var error = new EliteResponse();
                 error.setMessage("no application found");
                 return ResponseEntity.status(400).body(error);
     }}
@@ -143,7 +151,21 @@ public class ApplicationService {
         if (user.isPresent()) {
             return ResponseEntity.ok().body(user.get().getApplications());
         }else {
-            return ResponseEntity.status(400).body(new EliteError("no Applications found for this user"));
+            return ResponseEntity.status(400).body(new EliteResponse("no Applications found for this user"));
+        }
+    }
+
+   public Resource loadFileAsResource(String fileName) {
+        try {
+            Path filePath = Paths.get("apps/").resolve(fileName+".apk").normalize(); 
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                throw new MyFileNotFoundException("File not found " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
     }
 

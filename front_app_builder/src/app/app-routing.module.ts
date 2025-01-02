@@ -8,6 +8,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { ForgetpasswordComponent } from './components/forgetpassword/forgetpassword.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { AuthGuard } from './guards/auth.guard';
+import { ProfileComponent } from './components/profile/profile.component';
+import { PayedComponent } from './components/payed/payed.component';
 
 const routes: Routes = [
   // Redirect empty path to 'login'
@@ -15,7 +17,9 @@ const routes: Routes = [
 
   // Main routes
   { path: 'login', component: LoginComponent },
+  {path : 'payed' , component : PayedComponent},
   { path: 'home', component: ListComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'create', component: CreateComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'forget-password', component: ForgetpasswordComponent },

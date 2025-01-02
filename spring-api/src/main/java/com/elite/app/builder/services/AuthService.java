@@ -7,7 +7,7 @@ import com.elite.app.builder.entities.User;
 import com.elite.app.builder.repositories.UserRepository;
 import com.elite.app.builder.utils.AuthenticationResponse;
 import com.elite.app.builder.utils.ConfirmMailRequest;
-import com.elite.app.builder.utils.EliteError;
+import com.elite.app.builder.utils.EliteResponse;
 import com.elite.app.builder.utils.ForgetPwdRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class AuthService {
 
         Optional<User> test = userRepo.findByEmail(user.getEmail());
         if (test.isPresent()) {
-            return ResponseEntity.badRequest().body(new EliteError("email already exist"));
+            return ResponseEntity.badRequest().body(new EliteResponse("email already exist"));
         }
          user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(role);
@@ -48,7 +47,7 @@ public class AuthService {
         emailService.sendConfirmationEmail(user.getEmail() , user.getActivationCode());
         userRepo.save(user);
         var JwtToken = jwtService.generateToken(user);
-        return ResponseEntity.ok(new EliteError("Please confirm your email"));
+        return ResponseEntity.ok(new EliteResponse("Please confirm your email"));
     }
 
     private String getActivationCode() {
@@ -76,7 +75,7 @@ public class AuthService {
             log.info(loginRequest.getEmail());
             log.info(loginRequest.getPassword());
             if (!user.isEnabled()) {
-                return ResponseEntity.status(401).body(new EliteError("Account not active yet"));
+                return ResponseEntity.status(401).body(new EliteResponse("Account not active yet"));
             }
             try {
                  authenticationManager.authenticate(
@@ -86,7 +85,7 @@ public class AuthService {
                         )
                 );
             } catch (BadCredentialsException e) {
-              return ResponseEntity.status(401).body(new EliteError("Bad Credentials"));
+              return ResponseEntity.status(401).body(new EliteResponse("Bad Credentials"));
             }
             log.info("after the authentication ");
             var JwtToken = jwtService.generateToken(user);
@@ -95,7 +94,7 @@ public class AuthService {
                     .token(JwtToken)
                     .build());
         } else {
-            return  ResponseEntity.status(401).body(new EliteError("Bad Credentials"));
+            return  ResponseEntity.status(401).body(new EliteResponse("Bad Credentials"));
         }
     }
 
@@ -107,12 +106,12 @@ public class AuthService {
                 user.setEnabled(true);
                 userRepo.save(user);
                 emailService.sendConfirmedEmail(user.getEmail());
-                return ResponseEntity.ok(new EliteError("your account enabled you can login now"));
+                return ResponseEntity.ok(new EliteResponse("your account enabled you can login now"));
             }else {
-                return ResponseEntity.status(400).body(new EliteError("Wrong Code "));
+                return ResponseEntity.status(400).body(new EliteResponse("Wrong Code "));
             }
         }else {
-            return ResponseEntity.status(400).body(new EliteError("Wrong User "));
+            return ResponseEntity.status(400).body(new EliteResponse("Wrong User "));
         }
     }
 
@@ -125,12 +124,12 @@ public class AuthService {
 
             if( emailService.sendResetPwdEmail(user.getEmail(), pwd)){
                 userRepo.save(user);
-                return ResponseEntity.status(200).body(new EliteError("link sent to you email"));
+                return ResponseEntity.status(200).body(new EliteResponse("link sent to you email"));
             }else{
-                return  ResponseEntity.status(500).body(new EliteError("something went wrong please try again"));
+                return  ResponseEntity.status(500).body(new EliteResponse("something went wrong please try again"));
             }
 
        }
-       return ResponseEntity.status(400).body(new EliteError("email is not registered"));
+       return ResponseEntity.status(400).body(new EliteResponse("email is not registered"));
     }
 }

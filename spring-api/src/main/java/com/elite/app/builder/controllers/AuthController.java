@@ -38,6 +38,14 @@ public class AuthController {
         return userService.deleteById(uid);
     }
 
+    @PostMapping("initPay/{email}/{ref}")
+    ResponseEntity<?> initPay(@PathVariable("email")String email , @PathVariable("ref")String paymentRef){
+        return userService.initPay(email , paymentRef);
+    }
+    @PostMapping("pay/{email}")
+    ResponseEntity<?> pay(@PathVariable("email")String email){
+        return userService.pay(email );
+    }
 
         @PostMapping("register")
         public ResponseEntity<?> register(@RequestBody User user) {

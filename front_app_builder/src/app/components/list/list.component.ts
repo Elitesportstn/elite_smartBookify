@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../../services/application.service';
 import { Application } from '../../models/models';
@@ -45,58 +45,42 @@ export class ListComponent implements OnInit{
 
   
 
-  onViewApplication(app: any) { 
-
-     this.applicationService.download(app.id).subscribe({
-      next: (response: any) => {
+  download(app: any) {
+    this.applicationService.download(app.id).subscribe({
+      next: (response: HttpResponse<Blob>) => {
         const blob = response.body as Blob;
         const url = window.URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+  
+        const a: HTMLAnchorElement = document.createElement('a');
         a.href = url;
+  
+        // Determine filename from response headers or fallback to default
         const contentDisposition = response.headers.get('Content-Disposition');
-        let filename = app.name+'.apk';
-
+        let filename = `${app.name}.apk`;
+  
         if (contentDisposition) {
           const matches = /filename="([^"]+)"/.exec(contentDisposition);
           if (matches != null && matches[1]) {
             filename = matches[1];
           }
         }
-
+  
         a.download = filename;
         document.body.appendChild(a);
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-
+  
         this.toastr.success('Download successful');
       },
-      error: (res: any) => {
-        console.error('Download error:', res);
-        const blob = res.body as Blob;
-        const url = window.URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        a.href = url;
-        const contentDisposition = res.headers.get('Content-Disposition');
-        let filename = app.name+'.apk';
-
-        if (contentDisposition) {
-          const matches = /filename="([^"]+)"/.exec(contentDisposition);
-          if (matches != null && matches[1]) {
-            filename = matches[1];
-          }
-        }
-
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-
-        this.toastr.success('Download successful');
-      }
-    }); 
+      error: (error) => {
+        console.error('Download error:', error);
+        this.toastr.error('Failed to download the file. Please try again later.');
+      },
+    });
   }
+  
+  
 
   onDeleteApplication(index: number) {
     this.toastr.error(this.applications[index].name + "(" + this.applications[index].version+ ")")
