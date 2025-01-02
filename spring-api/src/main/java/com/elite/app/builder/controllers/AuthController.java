@@ -7,7 +7,7 @@ import com.elite.app.builder.services.LoginRequest;
 import com.elite.app.builder.services.UserService;
 import com.elite.app.builder.utils.ConfirmMailRequest;
 import com.elite.app.builder.utils.ForgetPwdRequest;
-import com.elite.app.builder.utils.initPayRequest ;
+import com.elite.app.builder.utils.InitPayRequest ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
