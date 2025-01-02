@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { PaymentService } from '../../services/payment.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -12,16 +13,17 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent {
   user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    subscriptionActive: false, // Initial subscription status
   };
   isLoading = false ;
 
   constructor(
     private router : Router,
+    private authService : AuthService,
     private paymentService : PaymentService , private toastr : ToastrService){}
-  onSubscribe() {
+
+
+
+    onSubscribe() {
     this.isLoading = true ;
     this.paymentService.initPayURL().subscribe({
       next : (res : any )=>{
@@ -45,9 +47,9 @@ export class ProfileComponent {
     })
   }
 
-  onUnsubscribe() {
-    // Simulate an unsubscription action
-    this.user.subscriptionActive = false;
-    alert('Your subscription has been canceled.');
+  getCurrentUser(){
+    this.user = this.authService.getUser()
   }
+
+  
 }

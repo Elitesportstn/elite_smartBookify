@@ -5,7 +5,7 @@
     <div class="profile-details">
       <div class="profile-item">
         <span class="profile-label">Name:</span>
-        <span class="profile-value">{{ user.name }}</span>
+        <span class="profile-value">{{ user.username }}</span>
       </div>
       <div class="profile-item">
         <span class="profile-label">Email:</span>
@@ -14,7 +14,7 @@
       <div class="profile-item">
         <span class="profile-label">Subscription Status:</span>
         <span class="profile-value">
-          {{ user.subscriptionActive ? 'Active' : 'Not Subscribed' }}
+          {{ user.subscribed ? 'Active' : 'Not Subscribed' }}
         </span>
       </div>
     </div>
