@@ -7,6 +7,7 @@ import com.elite.app.builder.services.LoginRequest;
 import com.elite.app.builder.services.UserService;
 import com.elite.app.builder.utils.ConfirmMailRequest;
 import com.elite.app.builder.utils.ForgetPwdRequest;
+import com.elite.app.builder.utils.initPayRequest ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +42,9 @@ public class AuthController {
         return userService.deleteById(uid);
     }
 
-    @PostMapping("initPay/{email}/{ref}")
-    ResponseEntity<?> initPay(@PathVariable("email")String email , @PathVariable("ref")String paymentRef){
-        return userService.initPay(email , paymentRef);
+    @PostMapping("initPay")
+    ResponseEntity<?> initPay(@RequestBody InitPayRequest request){
+        return userService.initPay(request.email , request.paymentRef);
     }
     @PostMapping("pay/{email}")
     ResponseEntity<?> pay(@PathVariable("email")String email){

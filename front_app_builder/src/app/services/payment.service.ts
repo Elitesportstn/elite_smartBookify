@@ -33,8 +33,12 @@ export class PaymentService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.authService.getToken()}`
     });
-    return this.http.post(this.localUrl+"initPay/" + this.authService.getUserEmail() +"/"+ ref ,
-     {} , 
+    const body = {
+      email :  this.authService.getUserEmail(),
+       paymentRef :ref 
+    }
+    return this.http.post(this.localUrl+"initPay",
+     body , 
       {
       headers: headers
     });
