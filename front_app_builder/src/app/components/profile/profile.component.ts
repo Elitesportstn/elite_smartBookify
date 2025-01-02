@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '../../services/payment.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit{
   user : any;
   isLoading = false ;
 
@@ -20,7 +20,9 @@ export class ProfileComponent {
     private authService : AuthService,
     private paymentService : PaymentService , private toastr : ToastrService){}
 
-
+    ngOnInit(): void {
+      this.getCurrentUser()
+    }
 
     onSubscribe() {
     this.isLoading = true ;
