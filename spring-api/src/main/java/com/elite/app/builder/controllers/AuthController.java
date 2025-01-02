@@ -10,10 +10,13 @@ import com.elite.app.builder.utils.ForgetPwdRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @RestController
 @RequestMapping("api/auth/")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "https://smartbookify.savooria.com")
 public class AuthController {
 
     final UserService userService;

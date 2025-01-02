@@ -32,7 +32,6 @@ export class ProfileComponent implements OnInit{
          this.paymentService.initPay(res.paymentRef).subscribe({
           next : ()=>{
             this.isLoading =false ;
-
             window.open(res.payUrl , '_blank')
           },
           error : (err : any )=> {

@@ -31,10 +31,9 @@ export class PaymentService {
   }
   initPay( ref : any ){
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.authService.getToken()}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.authService.getToken()}`
     });
-    return this.http.post( this.localUrl+"initPay/" + this.authService.getUserEmail() +"/"+ ref ,
+    return this.http.post(this.localUrl+"initPay/" + this.authService.getUserEmail() +"/"+ ref ,
      {} , 
       {
       headers: headers
