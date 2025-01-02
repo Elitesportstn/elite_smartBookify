@@ -12,8 +12,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-  user = {
-  };
+  user : any;
   isLoading = false ;
 
   constructor(
