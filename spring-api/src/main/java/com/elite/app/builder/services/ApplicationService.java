@@ -46,7 +46,7 @@ public class ApplicationService {
         var application = new Application();
         LocalDateTime now = LocalDateTime.now();
         // Format the date and time (e.g., "01.01.2025.10.37")
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm");
         String formattedDate = now.format(formatter);
         appname = appname+formattedDate;
         if (optionalUser.isPresent()){
